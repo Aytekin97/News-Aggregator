@@ -7,6 +7,8 @@ from loguru import logger
 from config import settings
 from schemas import LinkTagsSchema
 
+import pprint
+
 
 class GoogleSearchClient:
     def __init__(self):
@@ -26,47 +28,18 @@ class GoogleSearchClient:
         to_date = datetime.now().strftime("%Y%m%d")
 
         keyWords = {
-            "Load Growth news New York": "Load Growth",
-            "Demand Response news New York": "Demand Response",
-            "Zero-emission news New York": "Zero-Emission",
-            "Grid Reliability news New York": "Grid Reliability",
-            "Peak demand news New York": "Peak Demand",
-            "Grid Interconnection news New York": "Grid Interconnection",
-            "Battery energy storage system (BESS) news New York": "BESS",
-            "Energy Storage news New York": "Energy Storage",
+            "Tesla earnings report analysis": "Earnings Analysis",
+            "Tesla new product launch impact": "Product Launch",
+            "Tesla regulatory news or government policy": "Regulations",
+            "Tesla production or supply chain challenges": "Production",
+            "Tesla competition in EV market": "EV Market"
         }
 
         # Values respresents links to exclude, if no value,
         # then there will be no links to exclude
         sites = {
-            "utilitydive.com/news/": "",
-            "powermag.com/": ["powermag.com/category/", "powermag.com/author/", "powermag.com/tag/"],
-            "canarymedia.com/articles/": "",
-            "latitudemedia.com/news/": "",
-            "energy-storage.news/": [
-                "energy-storage.news/category",
-                "energy-storage.news/subjects",
-                "energy-storage.news/tag/",
-            ],
-            "thehill.com/opinion/energy-environment/": "",
-            "thehill.com/policy/energy-environment/": "",
-            "thehill.com/homenews/": "",
-            "heatmap.news/sparks/": "",
-            "about.bnef.com/blog/": ["about.bnef.com/blog/category/"],
-            "theconversation.com/": [
-                "theconversation.com/uk",
-                "theconversation.com/topics/",
-                "theconversation.com/us/topics/",
-                "theconversation.com/nz/topics/",
-                "theconversation.com/us",
-                "theconversation.com/au",
-            ],
-            "thecity.nyc/": ["thecity.nyc/author/"],
-            "politico.com/news/": "politico.com/news/new-york",
-            "prnewswire.com/news-releases/": "",
-            "governor.ny.gov/news/": "governor.ny.gov/news?",
-            "nyserda.ny.gov/About/Newsroom/": "",
-            "renews.biz/": ["renews.biz/tags?", "renews.biz/remix"]
+            "investopedia.com": "",
+            "fool.com": ""
         }
 
         results = []
@@ -108,3 +81,7 @@ class GoogleSearchClient:
                                     result.tags.append(tag)
 
         return results
+
+pp = pprint.PrettyPrinter()
+client = GoogleSearchClient()
+pp.pprint(client.fetch_news)
