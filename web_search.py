@@ -2,12 +2,15 @@ import requests
 from datetime import datetime, timedelta
 import time
 from typing import List
+import json
+import os
 
 from loguru import logger
 from config import settings
 from schemas import LinkTagsSchema
 
-import pprint
+
+path = os.path.join(os.path.dirname(__file__), "web_search_results.json")
 
 
 class GoogleSearchClient:
@@ -82,6 +85,7 @@ class GoogleSearchClient:
 
         return results
 
-pp = pprint.PrettyPrinter()
 client = GoogleSearchClient()
-pp.pprint(client.fetch_news)
+response = client.fetch_news()    
+with open(path, "w") as file:
+    json.dump([r.dict() for r in response], file, indent=4)

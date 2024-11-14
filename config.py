@@ -10,14 +10,14 @@ class Settings(BaseSettings):
         extra="ignore",
     )
 
-    db_url: list[str]
+    db_url: str
 
     openai_api_key: str
     openai_model: str
 
     google_search_api_key: str
     google_search_engine_id: str
-    google_search_engine_url: str
+    google_search_engine_url: str = "https://www.googleapis.com/customsearch/v1"
     google_search_number_of_retries: int
 
     news_range_in_days: int
