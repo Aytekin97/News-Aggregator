@@ -29,7 +29,7 @@ from schemas import (
 
 from article_fetcher import ArticleFetcher
 from web_search import GoogleSearchClient
-from openai_client import OpenAiClient
+from openai_client import OpenAiClient, OpenAiClientForDates
 #from db import Sessions, NewsModel, TagModel
 from config import settings
 
@@ -40,11 +40,12 @@ def main(company):
     google_search_client = GoogleSearchClient(company)
     logger.info("Google search client created.")
     openai_client = OpenAiClient()
+    openai_client_for_dates = OpenAiClientForDates()
     logger.info("OpenAI client created.")
 
     links_tags = google_search_client.get_news_links()
 
-    article_fetcher = ArticleFetcher(links_tags, openai_client)
+    article_fetcher = ArticleFetcher(links_tags, openai_client_for_dates)
     logger.info("Article fetcher created.")
     articles = article_fetcher.get_all_articles()
     logger.info("Articles fetched")
@@ -52,8 +53,10 @@ def main(company):
 
     company_based_articles = filter_company_based_articles(articles, openai_client, company)
 
+    company_based_articles_with_dates = article_fetcher.get_published_date(company_based_articles)
+
     with open(path, "w") as file:
-        company_based_articles_data = [company_based_article.dict() for company_based_article in company_based_articles]
+        company_based_articles_data = [company_based_article.dict() for company_based_article in company_based_articles_with_dates]
         json.dump(company_based_articles_data, file, indent=4, default=str)
 
 

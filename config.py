@@ -14,6 +14,7 @@ class Settings(BaseSettings):
 
     openai_api_key: str
     openai_model: str
+    openai_model_dates: str
 
     google_search_api_key: str
     google_search_engine_id: str
