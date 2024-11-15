@@ -1,8 +1,13 @@
 class Agent:
-    def __init__(self, name, role, function):
+    def __init__(self, name, role, function, company=""):
         self.name: str = name
         self.role: str = role
         self.function: str = function
+        self.company: str = company
+
+    def set_company(self, company):
+        self.company = company
+        self.function = self.function.format(company=company)
 
     def __repr__(self) -> str:
         return f"Agent :{self.name} \nRole: {self.role} \nFunction: {self.function}"
@@ -18,18 +23,30 @@ class Agent:
 
 news_classification_agent = Agent(
     name="New York News Classification Agent",
-    role="You are an agent that specializes in identifying news stories related to New York. Your role involves analyzing the provided news articles and answer 5 yes/no questions in order to decide if the article is related to New York or not. Answer the questions and provide the number of yes answers as score.",
-    function="""Q1-Does the article explicitly mention New York State or the New York region in the context of energy?
-        Q2-Does the article discuss energy prices, supply, or demand specifically within New York?
-        Q3-Does the article address policies, regulations, or legislative actions that affect the New York energy market?
-        Q4-Does the article highlight significant projects, technological advancements, or infrastructure developments within New York's energy sector?
-        Q5-Are key organizations, companies, or public figures involved in New York's energy market mentioned in the article?
-        Q6-Is this article relevant to a utility-scale renewable energy or battery energy storage project developer in the New York region?
-        Q7-Does this article provide new and crucial information about aspects such as interconnection queue regulations, transmission grid planning, state incentives, or capacity market requirements that impact the development, origination, and project finance of renewable and battery energy storage projects in New York?
-        Q8-Does this article offer up-to-date news and announcements that would assist a renewable or battery energy storage project developer in making critical financial investment decisions in the New York region?
-        Q9-Does this article provide insights into the operations, development, or retirement of renewable energy power plants (including onshore/offshore wind farms, solar power plants, co-located energy storage facilities, hydrogen plants, hydropower stations, or nuclear plants) within the New York region?
-        Q10-Does this article report on new technological advancements or breakthroughs that impact the energy industry's operation, evolution, or development in North America, with relevance to the New York energy sector?
-""",
+    
+    role="You are an agent that specializes in identifying news stories related to a specified company. Your role involves analyzing the provided news articles and answering specific questions about the company to determine if the article is relevant. Based on your analysis, provide a score reflecting the number of relevant indicators found.",
+    function="""
+        Q1-Does the article suggest any changes in {company}'s financial performance, such as revenue growth, profit margins, or quarterly earnings?
+        Q2-Are there any specific products or models by {company} mentioned that could significantly impact sales or market demand?
+        Q3-Is there mention of new technological advancements or innovations by {company} that could enhance its market position or reduce operational costs?
+        Q4-Does the article compare {company}'s market share, pricing, or sales performance against its competitors in a way that suggests competitive advantages or disadvantages?
+        Q5-Are there updates or expansions related to {company}'s production facilities or factories that might impact production capacity or operational efficiency?
+        Q6-Does the article directly address {company}'s stock performance or factors that could influence stock price movements, such as investor sentiment or financial outlooks?
+        Q7-Are any new markets, sectors, or industries being explored by {company} that could diversify its revenue sources or reduce dependence on existing segments?
+        Q8-Does the article discuss regulatory changes, compliance issues, or legal matters involving {company} that could pose risks or create new opportunities?
+        Q9-Are there mentions of product recalls, safety concerns, or quality issues that could affect consumer confidence or result in financial liabilities for {company}?
+        Q10-Is {company}'s pricing strategy, business model, or sales approach discussed in a way that could suggest changes in revenue potential or competitive positioning?
+        Q11-Does the article mention {company} by name in the title or main content?
+        Q12-Are any specific models or products by {company} mentioned?
+        Q13-Is there a focus on technological advancements or new features associated with {company}'s offerings?
+        Q14-Does the article discuss {company}'s competitors in a way that compares their technologies, sales, or market influence?
+        Q15-Are production facilities or specific factories tied to {company} mentioned, including updates on new or existing locations?
+        Q16-Does the article address {company}'s stock performance, financial results, or revenue growth?
+        Q17-Are renewable energy products or alternative energy solutions by {company} discussed in the article?
+        Q18-Is {company}'s infrastructure or network for supporting its products or services discussed as part of its business model?
+        Q19-Does the article mention regulations, safety concerns, or recalls associated with {company}'s products or services?
+        Q20-Are {company}'s sales strategies, such as its direct-to-consumer approach or service offerings, highlighted in comparison to industry norms?
+    """,
 )
 
 primary_analysis_agent = Agent(

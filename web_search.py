@@ -2,28 +2,24 @@ import requests
 from datetime import datetime, timedelta
 import time
 from typing import List
-import json
-import os
 
 from loguru import logger
 from config import settings
 from schemas import LinkTagsSchema
 
 
-path = os.path.join(os.path.dirname(__file__), "web_search_results.json")
-
-
 class GoogleSearchClient:
-    def __init__(self):
+    def __init__(self, company):
         self.api_key = settings.google_search_api_key
         self.search_engine_id = settings.google_search_engine_id
         self.url = settings.google_search_engine_url
         self.news_range_in_days = settings.news_range_in_days
         self.number_of_retries = settings.google_search_number_of_retries
+        self.company = company
 
     def get_news_links(self) -> List[LinkTagsSchema]:
         link_tags_response = self.fetch_news()
-        logger.info("Links fetched length: {length}.".format(length=len(link_tags_response)))
+        logger.info("Links fetched. Length: {length}.".format(length=len(link_tags_response)))
         return link_tags_response
 
     def fetch_news(self) -> List[LinkTagsSchema]:
@@ -31,19 +27,23 @@ class GoogleSearchClient:
         to_date = datetime.now().strftime("%Y%m%d")
 
         keyWords = {
-            "Tesla earnings report analysis": "Earnings Analysis",
-            "Tesla new product launch impact": "Product Launch",
-            "Tesla regulatory news or government policy": "Regulations",
-            "Tesla production or supply chain challenges": "Production",
-            "Tesla competition in EV market": "EV Market"
+            f"{self.company} earnings report analysis": "Earnings Analysis"
         }
 
         # Values respresents links to exclude, if no value,
         # then there will be no links to exclude
         sites = {
-            "investopedia.com": "",
-            "fool.com": ""
+            "investopedia.com": ""
         }
+
+        """ ,
+            "fool.com": "" """
+        
+        """ ,
+            f"{self.company} regulatory news or government policy": "Regulations",
+            f"{self.company} production or supply chain challenges": "Production",
+            f"{self.company} competition in EV market": "EV Market",
+            f"{self.company} new product launch impact": "Product Launch" """
 
         results = []
         request_count = 0
@@ -68,6 +68,8 @@ class GoogleSearchClient:
                     "sort": f"date:r:{from_date}:{to_date}",
                 }
 
+                logger.info(f"Searching: {query}")
+
                 response = requests.get(self.url, params=params)
                 request_count += 1
                 result = response.json()
@@ -84,8 +86,4 @@ class GoogleSearchClient:
                                     result.tags.append(tag)
 
         return results
-
-client = GoogleSearchClient()
-response = client.fetch_news()    
-with open(path, "w") as file:
-    json.dump([r.dict() for r in response], file, indent=4)
+    
