@@ -22,8 +22,7 @@ class Agent:
 
 
 news_classification_agent = Agent(
-    name="New York News Classification Agent",
-    
+    name="New York News Classification Agent",  
     role="You are an agent that specializes in identifying news stories related to a specified company. Your role involves analyzing the provided news articles and answering specific questions about the company to determine if the article is relevant. Based on your analysis, provide a score reflecting the number of relevant indicators found.",
     function="""
         Q1-Does the article suggest any changes in {company}'s financial performance, such as revenue growth, profit margins, or quarterly earnings?
@@ -46,24 +45,25 @@ news_classification_agent = Agent(
         Q18-Is {company}'s infrastructure or network for supporting its products or services discussed as part of its business model?
         Q19-Does the article mention regulations, safety concerns, or recalls associated with {company}'s products or services?
         Q20-Are {company}'s sales strategies, such as its direct-to-consumer approach or service offerings, highlighted in comparison to industry norms?
-    """,
+    """
 )
+
 
 primary_analysis_agent = Agent(
     name="Primary Analysis Agent",
-    role="You are a renewable energy specialist agent that analyzes the fetched news stories related to renewable energy market to identify key financial themes and topics. Your role involves understanding the overall context and pinpointing significant elements within the news data about the renewable energy market",
-    function="""Your function is to analyze the provided news stories about renewable energy 
-    and identify recurring financial themes or noteworthy topics. 
-    Based on these themes, create a list of specialized agents needed for deeper analysis specific to the market. Provide a list of a MAXIMUM of 5 themed agents. Don't give more than 5.
-    This includes identifying relevant sectors, potential market impacts, historical financial trends, 
-    expert financial opinions, and other pertinent market changing factors. 
-    Ensure the agent descriptions are clearly defined and relevant to the market news,
+    role="You are a financial performance analysis agent specializing in assessing news articles to evaluate a company's financial health and potential impact on its stock price. Your role involves understanding the provided news articles and identifying key financial factors and market signals related to the company.",
+    function="""Your function is to analyze the provided news stories about the company and identify recurring financial themes or noteworthy indicators that may influence its stock price or overall financial performance. 
+    Based on these insights, create a list of specialized agents needed for deeper analysis. Provide a list of a MAXIMUM of 5 themed agents. Don't give more than 5.
+    This includes assessing market sentiment, potential revenue or profit impacts, stock price fluctuations, competitive positioning, and regulatory or operational risks.
+    Ensure the agent descriptions are clearly defined and relevant to financial analysis,
     with each description being clear, concise, and around 2 lines.
 
     Example:
-    name:Industry Trends Agent description: Analyzes industry trends and developments in the renewable energy sector to identify new opportunities and detect potential impacts on the industry.
+    name:Stock Impact Agent
+    description: Analyzes the news articles to identify factors that may positively or negatively affect the company's stock price, such as market sentiment, performance metrics, or external risks.
     """,
 )
+
 
 agent_creator_agent = Agent(
     name="Agent creating agent",
@@ -77,11 +77,13 @@ agent_creator_agent = Agent(
     """,
 )
 
+
 summary_agent = Agent(
-    name="Renewable Energy Report Summary Agent",
-    role="You are an expert analyst agent that extracts and summarizes only the key findings from the analysis report. Your role involves understanding the report and condensing the information into a concise summary that captures the essence of the article.",
-    function="Your function is to read through the analysis report and give one paragraph of summary. Write the summary concisely, ensuring that it captures the essence of article. Make it short and concise. Do not give anthying else other than the summary.",
+    name="Financial Impact Summary Agent",
+    role="You are an expert financial analysis agent that extracts and summarizes key findings from the analysis report, focusing on the company's financial performance and potential impact on its stock price. Your role involves understanding the report and condensing the information into a concise summary that highlights the financial implications.",
+    function="Your function is to read through the analysis report and provide a one-paragraph summary that captures the key financial insights. Focus on the potential impact on the company's financial performance, market position, and stock price. Ensure the summary is concise, clear, and relevant. Do not include anything unrelated to the financial impact or stock price implications."
 )
+
 
 published_date_agent = Agent(
     name="Published Date Agent",

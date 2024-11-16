@@ -27,20 +27,19 @@ class GoogleSearchClient:
         to_date = datetime.now().strftime("%Y%m%d")
 
         keyWords = {
-            f"{self.company} earnings report analysis": "Earnings Analysis"
+            f"{self.company} earnings report analysis": "Earnings Analysis",
+            f"{self.company} regulatory news or government policy": "Regulations"
         }
 
         # Values respresents links to exclude, if no value,
         # then there will be no links to exclude
         sites = {
-            "investopedia.com": ""
+            "investopedia.com": "",
+            "fool.com": ""
         }
-
-        """ ,
-            "fool.com": "" """
+        
         
         """ ,
-            f"{self.company} regulatory news or government policy": "Regulations",
             f"{self.company} production or supply chain challenges": "Production",
             f"{self.company} competition in EV market": "EV Market",
             f"{self.company} new product launch impact": "Product Launch" """

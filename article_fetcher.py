@@ -36,10 +36,24 @@ class ArticleFetcher:
             if not article.text:
                 logger.info(f"No article text found. URL: {link_tags.link}")
                 return None
-            return ArticleResponseSchema(link=link_tags.link,tags=link_tags.tags, title=article.title, text=article.text, html=article.html, published_date=article.publish_date)
+            
+            # Truncate the HTML string to half its length
+            html_content = article.html
+            if html_content:
+                html_content = html_content[len(html_content) // 2:]
+
+            return ArticleResponseSchema(
+                link=link_tags.link,
+                tags=link_tags.tags,
+                title=article.title,
+                text=article.text,
+                html=html_content,
+                published_date=article.publish_date
+            )
         except Exception as e:
             logger.error(f"Error fetching article: {str(e)}. URL: {link_tags.link}")
             return None
+        
 
     def get_all_articles(self, max_workers=20) -> List[ArticleResponseSchema]:
         articles = []
@@ -54,6 +68,7 @@ class ArticleFetcher:
                     logger.error(f"Error fetching article: {str(e)}")
         return articles
     
+    
     def get_published_date(self, articles) -> List[ArticleWithPublishedDateResponseSchema]:
         articles_with_published_date = []
         for article in articles:
@@ -64,6 +79,7 @@ class ArticleFetcher:
             articles_with_published_date.append(ArticleWithPublishedDateResponseSchema(
                 link=article.link, title=article.title, score=article.score, tags=article.tags, published_date=published_date, text=article.text))
         return articles_with_published_date
+    
     
     def __get_published_date(self, article) -> date:
         if article.published_date:
@@ -94,6 +110,7 @@ class ArticleFetcher:
             except json.JSONDecodeError as e:
                 logger.info(f"Error decoding json+ld: {e} URL: {article.link}")
                 return self.__get_published_date_via_llm(article)
+            
             
     def __get_published_date_via_llm(self, article) -> date:
         prompt = published_date_agent.prompt(article.html)

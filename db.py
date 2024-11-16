@@ -6,7 +6,7 @@ from sqlalchemy.types import Integer, BigInteger, String, Text, DateTime, Date
 
 from config import settings
 
-
+#For multiple DBs
 engines = [create_engine(url) for url in settings.db_url]
 
 
@@ -33,26 +33,30 @@ class BaseModel:
 class NewsModel(BaseModel):
     __tablename__ = "news"
 
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)  # Ensure auto-increment
     classification_score: Mapped[int] = mapped_column(Integer)
     title: Mapped[str] = mapped_column(String, nullable=True)
     summary: Mapped[str] = mapped_column(Text)
-    link: Mapped[str] = mapped_column(String, unique=True)
+    link: Mapped[str] = mapped_column(String, unique=True, nullable=False)
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.now)
     published_date: Mapped[date] = mapped_column(Date, nullable=True)
 
     tags: Mapped[list["TagModel"]] = relationship("TagModel", secondary="news_tags", back_populates="news")
 
 
+
 class TagModel(BaseModel):
     __tablename__ = "tag"
 
-    name: Mapped[str] = mapped_column(String, unique=True)
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)  # Ensure auto-increment
+    name: Mapped[str] = mapped_column(String, unique=True, nullable=False)
     news: Mapped[list["NewsModel"]] = relationship("NewsModel", secondary="news_tags", back_populates="tags")
 
 
 class NewsTagsModel(BaseModel):
     __tablename__ = "news_tags"
 
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)  # Ensure auto-increment
     news_id: Mapped[int] = mapped_column(Integer, ForeignKey("news.id"))
     tag_id: Mapped[int] = mapped_column(Integer, ForeignKey("tag.id"))
 

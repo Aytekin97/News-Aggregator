@@ -10,7 +10,7 @@ class Settings(BaseSettings):
         extra="ignore",
     )
 
-    db_url: str
+    db_url: list[str]
 
     openai_api_key: str
     openai_model: str
@@ -22,7 +22,13 @@ class Settings(BaseSettings):
     google_search_number_of_retries: int
 
     news_range_in_days: int
-    ny_classification_score_threshold: int
+    classification_score_threshold: int
+
+    def __init__(self, **data):
+        super().__init__(**data)
+        # Parse DB_URL as a list if it's a comma-separated string
+        if isinstance(self.db_url, str):
+            self.db_url = [url.strip() for url in self.db_url.split(",")]
 
 
 def load_settings():
