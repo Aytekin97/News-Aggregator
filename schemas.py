@@ -88,3 +88,7 @@ class NewsAggregatorResultSchema(BaseModel):
 class LinkTagsSchema(BaseModel):
         link: str
         tags: list[str]
+
+
+class CompanyRequest(BaseModel):
+    company: str
