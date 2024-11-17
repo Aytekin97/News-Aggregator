@@ -91,4 +91,4 @@ class LinkTagsSchema(BaseModel):
 
 
 class CompanyRequest(BaseModel):
-    company: str
+    companies: list[str]

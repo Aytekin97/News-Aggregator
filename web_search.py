@@ -28,7 +28,10 @@ class GoogleSearchClient:
 
         keyWords = {
             f"{self.company} earnings report analysis": "Earnings Analysis",
-            f"{self.company} regulatory news or government policy": "Regulations"
+            f"{self.company} regulatory news or government policy": "Regulations",
+            f"{self.company} production or supply chain challenges": "Production",
+            f"{self.company} competition in EV market": "EV Market",
+            f"{self.company} new product launch impact": "Product Launch"
         }
 
         # Values respresents links to exclude, if no value,
@@ -36,13 +39,7 @@ class GoogleSearchClient:
         sites = {
             "investopedia.com": "",
             "fool.com": ""
-        }
-        
-        
-        """ ,
-            f"{self.company} production or supply chain challenges": "Production",
-            f"{self.company} competition in EV market": "EV Market",
-            f"{self.company} new product launch impact": "Product Launch" """
+        }        
 
         results = []
         request_count = 0
