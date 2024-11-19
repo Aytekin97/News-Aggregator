@@ -40,6 +40,7 @@ class NewsModel(BaseModel):
     link: Mapped[str] = mapped_column(String, unique=True, nullable=False)
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.now)
     published_date: Mapped[date] = mapped_column(Date, nullable=True)
+    company_name: Mapped[str] = mapped_column(String, unique=False, nullable=True)
 
     tags: Mapped[list["TagModel"]] = relationship("TagModel", secondary="news_tags", back_populates="news")
 

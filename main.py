@@ -84,6 +84,7 @@ def main(request: CompanyRequest):
                             summary=summary.summary,
                             link=str(summary.link),  # Convert URL to string
                             published_date=summary.published_date,
+                            company_name=company
                         )
                         from sqlalchemy.sql import select
                         for tag_name in summary.tags:
