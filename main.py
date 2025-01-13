@@ -42,7 +42,7 @@ def main(request: CompanyRequest):
     for company in companies:
         logger.info(f"Getting news for: {company}")
         try:
-            google_search_client = GoogleSearchClient(company)
+            google_search_client = GoogleSearchClient(company, request.number_of_days)
             logger.info("Google search client created.")
             openai_client = OpenAiClient()
             openai_client_for_dates = OpenAiClientForDates()

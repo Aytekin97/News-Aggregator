@@ -92,3 +92,4 @@ class LinkTagsSchema(BaseModel):
 
 class CompanyRequest(BaseModel):
     companies: list[str]
+    number_of_days: int

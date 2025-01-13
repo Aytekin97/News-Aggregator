@@ -9,11 +9,11 @@ from schemas import LinkTagsSchema
 
 
 class GoogleSearchClient:
-    def __init__(self, company):
+    def __init__(self, company, number_of_days):
         self.api_key = settings.google_search_api_key
         self.search_engine_id = settings.google_search_engine_id
         self.url = settings.google_search_engine_url
-        self.news_range_in_days = settings.news_range_in_days
+        self.news_range_in_days = number_of_days
         self.number_of_retries = settings.google_search_number_of_retries
         self.company = company
 

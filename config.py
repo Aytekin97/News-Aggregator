@@ -21,7 +21,6 @@ class Settings(BaseSettings):
     google_search_engine_url: str = "https://www.googleapis.com/customsearch/v1"
     google_search_number_of_retries: int
 
-    news_range_in_days: int
     classification_score_threshold: int
 
     def __init__(self, **data):
