@@ -21,14 +21,14 @@ def main(request: CompanyRequest):
     companies = request.companies
     for company in companies:
         logger.info(f"Getting news for: {company}")
-        try:
-            google_search_client = GoogleSearchClient(company, request.number_of_days)
-            logger.info("Google search client created.")
+        try: 
             openai_client = OpenAiClient()
             openai_client_for_dates = OpenAiClientForDates()
             logger.info("OpenAI client created.")
+            google_search_client = GoogleSearchClient(company, request.number_of_days, openai_client)
+            logger.info("Google search client created.")
 
-            links_tags = google_search_client.get_news_links()
+            links_tags = google_search_client.get_news_links(openai_client)
 
             article_fetcher = ArticleFetcher(links_tags, openai_client_for_dates)
             logger.info("Article fetcher created.")

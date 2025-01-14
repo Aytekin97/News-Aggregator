@@ -9,7 +9,7 @@ from dateutil import parser
 
 from loguru import logger
 from schemas import ArticlePublishedDateOpenAiResponseSchema, ArticleResponseSchema, ArticleWithPublishedDateResponseSchema
-from agent import published_date_agent
+from agents import published_date_agent
 
 
 class ArticleFetcher:

@@ -93,3 +93,12 @@ class LinkTagsSchema(BaseModel):
 class CompanyRequest(BaseModel):
     companies: list[str]
     number_of_days: int
+
+
+class SearchTermSchema(BaseModel):
+    search_term: str
+    tag: str
+
+
+class SearchTermsSchema(BaseModel):
+    pairs: list[SearchTermSchema]

@@ -2,20 +2,21 @@ import requests
 from datetime import datetime, timedelta
 import time
 from typing import List
-
+from agents import search_terms_agent
 from loguru import logger
 from config import settings
-from schemas import LinkTagsSchema
+from schemas import LinkTagsSchema, SearchTermsSchema
 
 
 class GoogleSearchClient:
-    def __init__(self, company, number_of_days):
+    def __init__(self, company, number_of_days, openai_client):
         self.api_key = settings.google_search_api_key
         self.search_engine_id = settings.google_search_engine_id
         self.url = settings.google_search_engine_url
         self.news_range_in_days = number_of_days
         self.number_of_retries = settings.google_search_number_of_retries
         self.company = company
+        self.openai_client = openai_client
 
     def get_news_links(self) -> List[LinkTagsSchema]:
         link_tags_response = self.fetch_news()
@@ -26,13 +27,11 @@ class GoogleSearchClient:
         from_date = (datetime.now() - timedelta(days=self.news_range_in_days)).strftime("%Y%m%d")
         to_date = datetime.now().strftime("%Y%m%d")
 
-        keyWords = {
-            f"{self.company} earnings report analysis": "Earnings Analysis",
-            f"{self.company} regulatory news or government policy": "Regulations",
-            f"{self.company} production or supply chain challenges": "Production",
-            f"{self.company} competition in EV market": "EV Market",
-            f"{self.company} new product launch impact": "Product Launch"
-        }
+        search_terms_agent.set_company(self.company)
+        prompt = search_terms_agent.prompt(self.company)
+        logger.info(f"Querying ChatGPT to get search terms and tags")
+        pairs = self.openai_client.query_gpt(prompt, SearchTermsSchema)
+        logger.success(f"Pairs received. Number of pairs: {len(pairs)}")
 
         # Values respresents links to exclude, if no value,
         # then there will be no links to exclude
@@ -45,13 +44,13 @@ class GoogleSearchClient:
         request_count = 0
         seen_links = set()
 
-        for keyWord, tag in keyWords.items():
+        for pair in pairs:
             for site, exclusions in sites.items():
                 if request_count >= 90:
                     time.sleep(60)
                     request_count = 0
 
-                query = f"{keyWord} site:{site}"
+                query = f"{pair.search_term} site:{site}"
 
                 if exclusions:
                     exclusion_str = " ".join([f"-inurl:{url}" for url in exclusions])
@@ -75,11 +74,11 @@ class GoogleSearchClient:
                         link = item.get("link")
                         if link and link not in seen_links:
                             seen_links.add(link)
-                            results.append(LinkTagsSchema(link=link, tags=[tag]))
+                            results.append(LinkTagsSchema(link=link, tags=[pair.tag]))
                         elif link and link in seen_links:
                             for result in results:
                                 if result.link == link:
-                                    result.tags.append(tag)
+                                    result.tags.append(pair.tag)
 
         return results
     
