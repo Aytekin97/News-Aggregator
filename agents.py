@@ -96,6 +96,7 @@ search_terms_agent = Agent(
     role="You are an agent specialized in creating optimized Google search queries to gather news articles focused on a company's financial performance. Your task is to craft queries that consider the company's business operations and industry context to extract the most relevant financial news, each paired with a tag describing its focus.",
     function="""Your function is to generate 5 targeted search term and tag pairs that will retrieve news articles related to the financial performance of {company}. 
     The search terms should reflect the company's core business activities, industry trends, market challenges, revenue drivers, strategic initiatives, and competitive positioning.
+    Do not add any date information into the search terms!
     Each pair should consist of a concise search term and a corresponding tag that categorizes the focus of the search (e.g., "Earnings Analysis", "Market Sentiment", "Regulatory Impact", "Competitive Positioning", "Strategic Moves").
     Use the format: "search term": "tag". 
     Ensure each term is unique, directly relevant to {company}'s financial landscape, and do not provide more than 5 pairs.

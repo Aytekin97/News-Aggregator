@@ -30,7 +30,8 @@ class GoogleSearchClient:
         search_terms_agent.set_company(self.company)
         prompt = search_terms_agent.prompt(self.company)
         logger.info(f"Querying ChatGPT to get search terms and tags")
-        pairs = self.openai_client.query_gpt(prompt, SearchTermsSchema)
+        schema_response = self.openai_client.query_gpt(prompt, SearchTermsSchema)
+        pairs = schema_response.pairs
         logger.success(f"Pairs received: {pairs}")
 
         # Values respresents links to exclude, if no value,
