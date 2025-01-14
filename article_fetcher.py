@@ -6,7 +6,8 @@ from datetime import date
 from bs4 import BeautifulSoup
 import json
 from dateutil import parser
-
+import tiktoken
+from dateutil import parser
 from loguru import logger
 from schemas import ArticlePublishedDateOpenAiResponseSchema, ArticleResponseSchema, ArticleWithPublishedDateResponseSchema
 from agents import published_date_agent
@@ -113,12 +114,29 @@ class ArticleFetcher:
             
             
     def __get_published_date_via_llm(self, article) -> date:
-        prompt = published_date_agent.prompt(article.html)
+        # Initialize tokenizer for the model you are using, e.g., gpt-3.5-turbo
+        encoding = tiktoken.encoding_for_model("gpt-3.5-turbo")
+        max_tokens = 100000
+
+        # Encode the article HTML to tokens
+        tokens = encoding.encode(article.html)
+
+        # Truncate to the first 100,000 tokens if necessary
+        if len(tokens) > max_tokens:
+            tokens = tokens[:max_tokens]
+
+        # Decode the truncated tokens back into a string
+        truncated_html = encoding.decode(tokens)
+
+        # Use the truncated HTML in the prompt
+        prompt = published_date_agent.prompt(truncated_html)
+
         response = self.openai_client.query_gpt(prompt, ArticlePublishedDateOpenAiResponseSchema)
         if isinstance(response, ArticlePublishedDateOpenAiResponseSchema):
             parsed_date = parser.parse(response.published_date)
             logger.info(f"Published date fetched via LLM. URL: {parsed_date.date()}")
             return parsed_date.date()
         else:
-            logger.error(f"Error fetching published date via LLM. Bad LLM response URL: {article.link}, response: {response}")
-
+            logger.error(
+                f"Error fetching published date via LLM. Bad LLM response URL: {article.link}, response: {response}"
+            )
