@@ -28,7 +28,7 @@ def main(request: CompanyRequest):
             google_search_client = GoogleSearchClient(company, request.number_of_days, openai_client)
             logger.info("Google search client created.")
 
-            links_tags = google_search_client.get_news_links(openai_client)
+            links_tags = google_search_client.get_news_links()
 
             article_fetcher = ArticleFetcher(links_tags, openai_client_for_dates)
             logger.info("Article fetcher created.")
