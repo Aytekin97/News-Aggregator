@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 from fastapi import FastAPI, HTTPException
 import os
 from loguru import logger
