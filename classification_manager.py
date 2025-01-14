@@ -6,7 +6,7 @@ from typing import List
 
 
 def filter_company_based_articles(articles: List[ArticleResponseSchema], openai_client, company, questions_and_threshold) -> List[ArticleClassificationScoreSchema]:
-    all_articles = get_classification_score_of_company_based_news(articles, openai_client, company)
+    all_articles = get_classification_score_of_company_based_news(articles, openai_client, company, questions_and_threshold)
     filtered_articles = [result for result in all_articles if result.score >= questions_and_threshold.threshold]
     sorted_filtered_articles = sorted(filtered_articles, key=lambda x: x.score, reverse=True)
     logger.info("Number of articles before classification: {length}.".format(length=len(articles)))
@@ -16,7 +16,7 @@ def filter_company_based_articles(articles: List[ArticleResponseSchema], openai_
 def get_classification_score_of_company_based_news(articles, openai_client, company, questions_and_threshold) -> List[ArticleClassificationScoreSchema]:
     results = []
     for article in articles:
-        result = get_classification_result(article, openai_client, company)
+        result = get_classification_result(article, openai_client, company, questions_and_threshold)
         results.append(result)
     return results
 
