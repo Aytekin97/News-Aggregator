@@ -4,7 +4,8 @@ import os
 from loguru import logger
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import IntegrityError
-from schemas import CompanyRequest
+from agents import news_question_generator_agent
+from schemas import CompanyRequest, QuestionsThresholdSchema
 from article_fetcher import ArticleFetcher
 from web_search import GoogleSearchClient
 from openai_client import OpenAiClient, OpenAiClientForDates
@@ -25,6 +26,13 @@ def main(request: CompanyRequest):
             openai_client = OpenAiClient()
             openai_client_for_dates = OpenAiClientForDates()
             logger.info("OpenAI client created.")
+
+            logger.info(f"Getting search terms and threshold")
+            news_question_generator_agent.set_company(company)
+            prompt = news_question_generator_agent.prompt(company)
+            output = openai_client.query_gpt(prompt, QuestionsThresholdSchema)
+            logger.success(f"Number of questions: {len(output.questions)}, Threshold: {output.threshold}")
+
             google_search_client = GoogleSearchClient(company, request.number_of_days, openai_client)
             logger.info("Google search client created.")
 
@@ -36,7 +44,7 @@ def main(request: CompanyRequest):
             logger.info("Articles fetched")
             logger.info(f"Number of articles fetched: {len(articles)}")
 
-            company_based_articles = filter_company_based_articles(articles, openai_client, company)
+            company_based_articles = filter_company_based_articles(articles, openai_client, company, output)
 
             company_based_articles_with_dates = article_fetcher.get_published_date(company_based_articles)
 

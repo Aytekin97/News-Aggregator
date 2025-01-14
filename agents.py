@@ -25,26 +25,6 @@ news_classification_agent = Agent(
     name="New York News Classification Agent",  
     role="You are an agent that specializes in identifying news stories related to a specified company. Your role involves analyzing the provided news articles and answering specific questions about the company to determine if the article is relevant. Based on your analysis, provide a score reflecting the number of relevant indicators found.",
     function="""
-        Q1-Does the article suggest any changes in {company}'s financial performance, such as revenue growth, profit margins, or quarterly earnings?
-        Q2-Are there any specific products or models by {company} mentioned that could significantly impact sales or market demand?
-        Q3-Is there mention of new technological advancements or innovations by {company} that could enhance its market position or reduce operational costs?
-        Q4-Does the article compare {company}'s market share, pricing, or sales performance against its competitors in a way that suggests competitive advantages or disadvantages?
-        Q5-Are there updates or expansions related to {company}'s production facilities or factories that might impact production capacity or operational efficiency?
-        Q6-Does the article directly address {company}'s stock performance or factors that could influence stock price movements, such as investor sentiment or financial outlooks?
-        Q7-Are any new markets, sectors, or industries being explored by {company} that could diversify its revenue sources or reduce dependence on existing segments?
-        Q8-Does the article discuss regulatory changes, compliance issues, or legal matters involving {company} that could pose risks or create new opportunities?
-        Q9-Are there mentions of product recalls, safety concerns, or quality issues that could affect consumer confidence or result in financial liabilities for {company}?
-        Q10-Is {company}'s pricing strategy, business model, or sales approach discussed in a way that could suggest changes in revenue potential or competitive positioning?
-        Q11-Does the article mention {company} by name in the title or main content?
-        Q12-Are any specific models or products by {company} mentioned?
-        Q13-Is there a focus on technological advancements or new features associated with {company}'s offerings?
-        Q14-Does the article discuss {company}'s competitors in a way that compares their technologies, sales, or market influence?
-        Q15-Are production facilities or specific factories tied to {company} mentioned, including updates on new or existing locations?
-        Q16-Does the article address {company}'s stock performance, financial results, or revenue growth?
-        Q17-Are renewable energy products or alternative energy solutions by {company} discussed in the article?
-        Q18-Is {company}'s infrastructure or network for supporting its products or services discussed as part of its business model?
-        Q19-Does the article mention regulations, safety concerns, or recalls associated with {company}'s products or services?
-        Q20-Are {company}'s sales strategies, such as its direct-to-consumer approach or service offerings, highlighted in comparison to industry norms?
     """
 )
 
@@ -91,6 +71,7 @@ published_date_agent = Agent(
     function="Your function is to extract the published date of the news article from the given html. Search for date patterns in the html. Extract it and convert it into ISO 8601 standard date format. If you can't find any dates provide 1970-01-01 as date."
 )
 
+
 search_terms_agent = Agent(
     name="Search Terms Agent",
     role="You are an agent specialized in creating optimized Google search queries to gather news articles focused on a company's financial performance. Your task is to craft queries that consider the company's business operations and industry context to extract the most relevant financial news, each paired with a tag describing its focus.",
@@ -100,5 +81,35 @@ search_terms_agent = Agent(
     Each pair should consist of a concise search term and a corresponding tag that categorizes the focus of the search (e.g., "Earnings Analysis", "Market Sentiment", "Regulatory Impact", "Competitive Positioning", "Strategic Moves").
     Use the format: "search term": "tag". 
     Ensure each term is unique, directly relevant to {company}'s financial landscape, and do not provide more than 5 pairs.
+    """
+)
+
+
+news_question_generator_agent = Agent(
+    name="News Classification Question Generator Agent",
+    role=(
+        "You are an agent that specializes in generating tailored questions for classifying "
+        "news stories related to a specified company. Your role involves analyzing the company's "
+        "profile, industry context, and financial signals to create relevant questions that help "
+        "determine if a news article pertains to the company."
+    ),
+    function="""
+        For the company {company}, generate a set of up to 20 detailed yes/no questions designed to assess 
+        the relevance of news articles. These questions should cover key areas such as financial 
+        performance, product releases, technological advancements, market positioning, competitive 
+        analysis, regulatory issues, operational updates, and strategic initiatives. Ensure each 
+        question is specific to {company}'s context and phrased to elicit clear yes/no answers.
+        Questions should not specify any dates
+
+        In addition to the questions, provide a suggested threshold number representing the minimum 
+        positive answers required for an article to be considered relevant to {company}. This threshold 
+        should be based on the specificity and importance of the questions generated.
+
+        Example output format:
+        Questions:
+        Q1-Does the article suggest any changes in {company}'s financial performance, such as revenue growth or earnings?
+        Q2-Are there mentions of new products, services, or models by {company} that could impact its market?
+        ...
+        Threshold: X
     """
 )

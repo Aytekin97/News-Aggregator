@@ -102,3 +102,8 @@ class SearchTermSchema(BaseModel):
 
 class SearchTermsSchema(BaseModel):
     pairs: list[SearchTermSchema]
+
+
+class QuestionsThresholdSchema(BaseModel):
+    questions: list[str]
+    threshold: int
