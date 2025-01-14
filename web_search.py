@@ -37,7 +37,8 @@ class GoogleSearchClient:
         # then there will be no links to exclude
         sites = {
             "investopedia.com": "",
-            "fool.com": ""
+            "fool.com": "",
+            "finance.yahoo.com/news": ""
         }        
 
         results = []
